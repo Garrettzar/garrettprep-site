@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summer Schedule | GarrettPrep</title>
+  <style>
+    :root {
+      --ink: #111;
+      --paper: #fffef8;
+      --muted: #f6f4ec;
+      --red: #e9362f;
+      --green: #22a33d;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Comic Sans MS", "Comic Sans", "Marker Felt", "Segoe Print", system-ui, sans-serif;
+      line-height: 1.35;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(0,0,0,.025) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 30%, rgba(0,0,0,.02) 0 1px, transparent 1px);
+      background-size: 38px 38px, 52px 52px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      background: rgba(255,254,248,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: clamp(1.25rem, 2vw, 1.7rem);
+      letter-spacing: -.03em;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      height: 4px;
+      background: var(--ink);
+      transform: rotate(-1deg);
+      border-radius: 999px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 800;
+      font-size: .96rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a { position: relative; }
+
+    .nav-links a:hover::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: -4px;
+      height: 3px;
+      background: var(--ink);
+      transform: rotate(-2deg);
+      border-radius: 999px;
+    }
+
+    .schedule-link {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: white;
+      box-shadow: 3px 4px 0 var(--ink);
+      transform: rotate(-1deg);
+    }
+
+    .schedule-link::before {
+      content: "✓ ";
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 4px solid var(--ink);
+      padding: 13px 18px;
+      border-radius: 18px 14px 20px 12px;
+      font-weight: 900;
+      background: white;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(-.4deg);
+      transition: .15s ease;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 4px) rotate(.2deg);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .btn-small {
+      padding: 9px 14px;
+      border-width: 3px;
+      box-shadow: 4px 4px 0 var(--ink);
+      border-radius: 14px;
+    }
+
+    .btn-big {
+      font-size: 1.25rem;
+      padding: 18px 26px;
+      border-width: 5px;
+      box-shadow: 8px 9px 0 var(--ink);
+    }
+
+    .btn-check::before {
+      content: "✓";
+      color: var(--green);
+      margin-right: 8px;
+      font-weight: 900;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 42px;
+      padding: 64px 0 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 900;
+      background: white;
+      transform: rotate(-1deg);
+      margin-bottom: 18px;
+    }
+
+    .check, .xmark {
+      font-size: 1.65rem;
+      line-height: .8;
+      font-weight: 900;
+    }
+
+    .check { color: var(--green); }
+    .xmark { color: var(--red); }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    h1 {
+      font-size: clamp(3.1rem, 7.5vw, 6.9rem);
+      max-width: 960px;
+    }
+
+    h2 {
+      font-size: clamp(2.4rem, 5vw, 4.9rem);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      margin-bottom: 12px;
+    }
+
+    p, li { font-weight: 850; }
+
+    .section-lead, .hero p {
+      font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+      font-weight: 850;
+    }
+
+    .scribble-line {
+      display: inline-block;
+      position: relative;
+    }
+
+    .scribble-line::after {
+      content: "";
+      position: absolute;
+      left: 1%;
+      right: -2%;
+      bottom: -.08em;
+      height: .08em;
+      background: var(--ink);
+      border-radius: 999px;
+      transform: rotate(-1deg);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .micro-proof {
+      font-weight: 900;
+      font-size: 1rem;
+      max-width: 340px;
+    }
+
+    .whiteboard-card {
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 31px 22px 34px 19px;
+      padding: clamp(22px, 3vw, 34px);
+      box-shadow: 10px 11px 0 var(--ink);
+      position: relative;
+    }
+
+    .whiteboard-card::before {
+      content: "";
+      position: absolute;
+      inset: 9px -8px -7px 8px;
+      border: 2px solid rgba(0,0,0,.18);
+      border-radius: 28px 21px 31px 17px;
+      z-index: -1;
+      transform: rotate(.5deg);
+    }
+
+    .section { padding: 72px 0; }
+
+    .date-box { display: grid; gap: 18px; }
+
+    .big-date {
+      border: 4px solid var(--ink);
+      border-radius: 26px 18px 30px 15px;
+      padding: 22px;
+      background: var(--muted);
+      text-align: center;
+      transform: rotate(1deg);
+    }
+
+    .big-date strong {
+      display: block;
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .big-date span {
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .count-card {
+      border: 3px solid var(--ink);
+      border-radius: 18px 12px 19px 15px;
+      padding: 16px;
+      background: white;
+      text-align: center;
+      min-height: 112px;
+      display: grid;
+      place-items: center;
+    }
+
+    .count-card strong {
+      font-size: 2.2rem;
+      line-height: 1;
+      display: block;
+    }
+
+    .count-card span { font-weight: 900; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .schedule-card {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 28px 18px 30px 15px;
+      padding: 24px;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(var(--rot));
+    }
+
+    .schedule-card .tag {
+      display: inline-block;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 900;
+      background: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .schedule-card ul, .card-list {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    .schedule-card li, .card-list li {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .subject-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 26px;
+    }
+
+    .subject {
+      border: 3px solid var(--ink);
+      border-radius: 20px 14px 22px 16px;
+      padding: 18px;
+      background: white;
+      min-height: 150px;
+      transform: rotate(var(--rot));
+    }
+
+    .subject strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 3px;
+    }
+
+    .urgent-strip {
+      border: 4px solid var(--ink);
+      border-radius: 24px 16px 27px 14px;
+      padding: 20px;
+      background: white;
+      box-shadow: 7px 8px 0 var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      transform: rotate(-.4deg);
+    }
+
+    .urgent-strip strong {
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      letter-spacing: -.04em;
+    }
+
+    .slots-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .slot {
+      border: 3px solid var(--ink);
+      border-radius: 20px 14px 22px 16px;
+      padding: 18px;
+      background: white;
+      transform: rotate(var(--rot));
+    }
+
+    .slot h3 { font-size: 1.75rem; }
+    .slot p { margin-bottom: 0; }
+
+    .stick-scene {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .stick { width: 88px; height: 122px; flex: 0 0 auto; }
+
+    .cta-section {
+      text-align: center;
+      padding: 78px 0 96px;
+    }
+
+    .cta-section .whiteboard-card {
+      max-width: 900px;
+      margin: 0 auto;
+      transform: rotate(-.5deg);
+    }
+
+    .footer {
+      border-top: 4px solid var(--ink);
+      padding: 28px 0 42px;
+      font-weight: 900;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      font-size: .98rem;
+      opacity: .85;
+      font-weight: 850;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      .hero, .two-col, .schedule-grid, .slots-board { grid-template-columns: 1fr; }
+      .subject-board { grid-template-columns: 1fr 1fr; }
+      nav { align-items: flex-start; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 20px, 1140px); }
+      .nav-links { gap: 12px; font-size: .86rem; }
+      .countdown-grid, .subject-board { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="page">
+      <nav aria-label="Main navigation">
+        <a class="logo" href="index.html">GarrettPrep.com</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="accelerator.html">SAT Accelerator</a>
+          <a href="store.html">Digital Store</a>
+          <a href="about.html">About</a>
+          <a class="schedule-link" href="schedule.html">Summer Schedule</a>
+          <a class="btn btn-small" href="book.html">Book Now</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero page">
+      <div>
+        <div class="eyebrow"><span class="check">✓</span> Main summer SAT prep window</div>
+        <h1><span class="scribble-line">July 6</span><br />to<br />August 20</h1>
+        <p>
+          The GarrettPrep summer sprint is built for the full SAT: Reading, Writing, Math, timing, strategy, and test-day execution. This is the main window for students who want serious progress before fall testing season.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Sign Up For Summer SAT Prep</a>
+          <div class="micro-proof">Private 1-on-1 coaching or structured group SAT prep.</div>
+        </div>
+      </div>
+
+      <aside class="whiteboard-card date-box" aria-label="Summer SAT prep schedule overview">
+        <div class="big-date">
+          <span>Summer SAT Prep Sprint</span>
+          <strong>7/6 → 8/20</strong>
+        </div>
+        <div class="countdown-grid">
+          <div class="count-card"><div><strong>SAT</strong><span>Full Test</span></div></div>
+          <div class="count-card"><div><strong>1:1</strong><span>or Group</span></div></div>
+          <div class="count-card"><div><strong>150</strong><span>Point Goal</span></div></div>
+        </div>
+        <div class="stick-scene">
+          <svg class="stick" viewBox="0 0 100 140" role="img" aria-label="stick figure with calendar">
+            <rect x="56" y="12" width="34" height="35" rx="4" fill="none" stroke="currentColor" stroke-width="4" />
+            <path d="M56 22 H90 M65 8 V17 M81 8 V17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            <circle cx="36" cy="38" r="17" fill="none" stroke="currentColor" stroke-width="5" />
+            <circle cx="30" cy="36" r="2.5" fill="currentColor" />
+            <circle cx="42" cy="36" r="2.5" fill="currentColor" />
+            <path d="M29 44 Q36 51 45 44" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            <path d="M36 55 L36 95 M15 70 L62 62 M36 95 L15 128 M36 95 L62 128" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+          </svg>
+          <span>One focused summer window. One full-SAT plan.</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section page" id="options">
+      <h2>Summer Prep Options</h2>
+      <p class="section-lead">Choose the training format that matches the student’s goal, schedule, and accountability level.</p>
+
+      <div class="schedule-grid">
+        <article class="schedule-card" style="--rot:-1deg;">
+          <div class="tag">Highest accountability</div>
+          <h3>1-on-1 SAT Prep</h3>
+          <ul>
+            <li><span class="check">✓</span><span>Private coaching customized to the student</span></li>
+            <li><span class="check">✓</span><span>Reading, Writing, Math, and pacing</span></li>
+            <li><span class="check">✓</span><span>Diagnostic-based weakness map</span></li>
+            <li><span class="check">✓</span><span>Best for aggressive score-jump goals</span></li>
+          </ul>
+        </article>
+
+        <article class="schedule-card" style="--rot:.8deg;">
+          <div class="tag">Scalable option</div>
+          <h3>Group SAT Prep</h3>
+          <ul>
+            <li><span class="check">✓</span><span>Structured live lessons</span></li>
+            <li><span class="check">✓</span><span>Shared drills and timed sets</span></li>
+            <li><span class="check">✓</span><span>Lower-cost summer option</span></li>
+            <li><span class="check">✓</span><span>Best for disciplined students</span></li>
+          </ul>
+        </article>
+
+        <article class="schedule-card" style="--rot:-.6deg;">
+          <div class="tag">Start here</div>
+          <h3>Free Diagnostic</h3>
+          <ul>
+            <li><span class="check">✓</span><span>Current score and target score review</span></li>
+            <li><span class="check">✓</span><span>Section-by-section weakness map</span></li>
+            <li><span class="check">✓</span><span>Recommended prep path</span></li>
+            <li><span class="check">✓</span><span>Summer seat discussion</span></li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="urgent-strip">
+        <strong>Summer SAT seats should be claimed early.</strong>
+        <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Sign Up Now</a>
+      </div>
+    </section>
+
+    <section class="section page" id="subjects">
+      <div class="whiteboard-card">
+        <h2>What The Summer Schedule Covers</h2>
+        <p class="section-lead">This is full SAT preparation, not a math-only program.</p>
+
+        <div class="subject-board">
+          <div class="subject" style="--rot:-.8deg;">
+            <strong>Reading</strong>
+            <p>Passage strategy, evidence questions, main idea, inference, vocabulary-in-context, and trap answer elimination.</p>
+          </div>
+          <div class="subject" style="--rot:.7deg;">
+            <strong>Writing</strong>
+            <p>Grammar rules, punctuation, transitions, sentence structure, rhetorical skills, and fast elimination patterns.</p>
+          </div>
+          <div class="subject" style="--rot:-.5deg;">
+            <strong>Math</strong>
+            <p>Algebra, functions, geometry, data analysis, percent traps, and shortcut-based problem solving.</p>
+          </div>
+          <div class="subject" style="--rot:.9deg;">
+            <strong>Strategy</strong>
+            <p>Timing, module pacing, educated guessing, review routines, test-day execution, and confidence under pressure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page" id="sample-slots">
+      <div class="two-col">
+        <div class="whiteboard-card">
+          <h2>Sample Weekly Rhythm</h2>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span><strong>Content Session:</strong> teach one high-value SAT skill or question type.</span></li>
+            <li><span class="check">✓</span><span><strong>Timed Drill:</strong> practice under pressure with section-specific timing.</span></li>
+            <li><span class="check">✓</span><span><strong>Error Review:</strong> track exactly why points were lost.</span></li>
+            <li><span class="check">✓</span><span><strong>Homework:</strong> targeted Reading, Writing, or Math practice between sessions.</span></li>
+          </ul>
+          <p class="note">This is a flexible summer structure. Replace with exact meeting times when you finalize availability.</p>
+        </div>
+
+        <div class="whiteboard-card">
+          <h2>Potential Time Blocks</h2>
+          <div class="slots-board">
+            <div class="slot" style="--rot:-.6deg;">
+              <h3>Morning</h3>
+              <p>Best for focused SAT prep before sports, jobs, camps, or summer plans.</p>
+            </div>
+            <div class="slot" style="--rot:.5deg;">
+              <h3>Afternoon</h3>
+              <p>Good for flexible schedules, group sessions, and longer drill blocks.</p>
+            </div>
+            <div class="slot" style="--rot:.6deg;">
+              <h3>Evening</h3>
+              <p>Works for students with daytime commitments or summer practices.</p>
+            </div>
+            <div class="slot" style="--rot:-.4deg;">
+              <h3>Weekend</h3>
+              <p>Useful for diagnostics, practice-test review, makeups, and parent check-ins.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page" id="rules">
+      <div class="whiteboard-card">
+        <h2>Summer Enrollment Rules</h2>
+        <p class="section-lead">The point of this window is momentum. Students get the best results when they treat SAT prep like a real training block.</p>
+        <div class="schedule-grid">
+          <article class="schedule-card" style="--rot:-.8deg;">
+            <h3><span class="check">✓</span> Show Up</h3>
+            <p>Consistent attendance matters. Missing sessions breaks the rhythm and slows progress.</p>
+          </article>
+          <article class="schedule-card" style="--rot:.6deg;">
+            <h3><span class="check">✓</span> Do The Reps</h3>
+            <p>Score jumps come from repeated practice, not just understanding a lesson once.</p>
+          </article>
+          <article class="schedule-card" style="--rot:-.4deg;">
+            <h3><span class="xmark">✕</span> No Random Prep</h3>
+            <p>Every missed question should reveal a fixable pattern, not become another mystery.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section page">
+      <div class="whiteboard-card">
+        <h2>Claim A Summer SAT Prep Seat</h2>
+        <p class="section-lead">Start with the free diagnostic. GarrettPrep will recommend the best path: private 1-on-1 SAT prep or group SAT prep.</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Sign Up For Summer SAT Prep</a>
+        </div>
+        <p class="note">This page uses the responder Google Form link you provided.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page footer-row">
+      <div>© GarrettPrep.com</div>
+      <div>July 6 – August 20 Full SAT Prep Sprint</div>
+    </div>
+  </footer>
+</body>
+</html>

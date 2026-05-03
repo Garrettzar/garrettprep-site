@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GarrettPrep | Full SAT Accelerator</title>
+  <style>
+    :root {
+      --ink: #111;
+      --paper: #fffef8;
+      --muted: #f6f4ec;
+      --red: #e9362f;
+      --green: #22a33d;
+      --shadow: rgba(0,0,0,.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Comic Sans MS", "Comic Sans", "Marker Felt", "Segoe Print", system-ui, sans-serif;
+      line-height: 1.35;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(0,0,0,.025) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 30%, rgba(0,0,0,.02) 0 1px, transparent 1px);
+      background-size: 38px 38px, 52px 52px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      background: rgba(255,254,248,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: clamp(1.25rem, 2vw, 1.7rem);
+      letter-spacing: -.03em;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      height: 4px;
+      background: var(--ink);
+      transform: rotate(-1deg);
+      border-radius: 999px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 800;
+      font-size: .96rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      position: relative;
+    }
+
+    .nav-links a:hover::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: -4px;
+      height: 3px;
+      background: var(--ink);
+      transform: rotate(-2deg);
+      border-radius: 999px;
+    }
+
+    .schedule-link {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: white;
+      box-shadow: 3px 4px 0 var(--ink);
+      transform: rotate(-1deg);
+    }
+
+    .schedule-link::before {
+      content: "✓ ";
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 4px solid var(--ink);
+      padding: 13px 18px;
+      border-radius: 18px 14px 20px 12px;
+      font-weight: 900;
+      background: white;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(-.4deg);
+      transition: .15s ease;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 4px) rotate(.2deg);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .btn-small {
+      padding: 9px 14px;
+      border-width: 3px;
+      box-shadow: 4px 4px 0 var(--ink);
+      border-radius: 14px;
+    }
+
+    .btn-big {
+      font-size: 1.25rem;
+      padding: 18px 26px;
+      border-width: 5px;
+      box-shadow: 8px 9px 0 var(--ink);
+    }
+
+    .btn-check::before {
+      content: "✓";
+      color: var(--green);
+      margin-right: 8px;
+      font-weight: 900;
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 42px;
+      padding: 56px 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 900;
+      background: white;
+      transform: rotate(-1deg);
+      margin-bottom: 18px;
+    }
+
+    .check, .xmark {
+      font-size: 1.65rem;
+      line-height: .8;
+      font-weight: 900;
+    }
+
+    .check { color: var(--green); }
+    .xmark { color: var(--red); }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    h1 {
+      font-size: clamp(3.2rem, 8vw, 7.3rem);
+      max-width: 900px;
+    }
+
+    h2 {
+      font-size: clamp(2.6rem, 5.2vw, 5.25rem);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: clamp(1.6rem, 3vw, 2.45rem);
+      margin-bottom: 12px;
+    }
+
+    .scribble-line {
+      display: inline-block;
+      position: relative;
+    }
+
+    .scribble-line::after {
+      content: "";
+      position: absolute;
+      left: 1%;
+      right: -2%;
+      bottom: -.08em;
+      height: .08em;
+      background: var(--ink);
+      border-radius: 999px;
+      transform: rotate(-1deg);
+    }
+
+    .hero p,
+    .section-lead,
+    .card p,
+    .offer p {
+      font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+      font-weight: 800;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .micro-proof {
+      font-weight: 900;
+      font-size: 1rem;
+      max-width: 310px;
+    }
+
+    .whiteboard-card {
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 31px 22px 34px 19px;
+      padding: clamp(22px, 3vw, 34px);
+      box-shadow: 10px 11px 0 var(--ink);
+      position: relative;
+    }
+
+    .whiteboard-card::before {
+      content: "";
+      position: absolute;
+      inset: 9px -8px -7px 8px;
+      border: 2px solid rgba(0,0,0,.18);
+      border-radius: 28px 21px 31px 17px;
+      z-index: -1;
+      transform: rotate(.5deg);
+    }
+
+    .hero-board {
+      transform: rotate(1deg);
+    }
+
+    .flow-title {
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      font-weight: 900;
+      margin-bottom: 18px;
+      text-decoration: underline;
+      text-decoration-thickness: 4px;
+      text-underline-offset: 8px;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 2px dashed rgba(0,0,0,.25);
+    }
+
+    .flow-row:last-child {
+      border-bottom: 0;
+    }
+
+    .circle-num {
+      width: 42px;
+      height: 42px;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.35rem;
+      background: white;
+    }
+
+    .flow-row strong {
+      display: block;
+      font-size: 1.3rem;
+    }
+
+    .flow-row span {
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .section {
+      padding: 78px 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .bad-list, .good-list {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0 0;
+      display: grid;
+      gap: 15px;
+    }
+
+    .bad-list li, .good-list li {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
+      align-items: start;
+      font-weight: 900;
+      font-size: 1.15rem;
+    }
+
+    .logic-strip {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr 60px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 32px;
+    }
+
+    .logic-box {
+      border: 3px solid var(--ink);
+      border-radius: 18px 12px 19px 15px;
+      padding: 18px;
+      background: white;
+      min-height: 130px;
+    }
+
+    .logic-box strong {
+      font-size: 1.35rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .arrow {
+      font-size: 2.6rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .stick-scene {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 20px;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .stick {
+      width: 80px;
+      height: 112px;
+      flex: 0 0 auto;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+    }
+
+    .mini-card {
+      background: white;
+      border: 3px solid var(--ink);
+      border-radius: 18px 14px 21px 12px;
+      padding: 16px;
+      min-height: 170px;
+      transform: rotate(var(--rot));
+    }
+
+    .mini-card strong {
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 8px;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    .mini-card p {
+      font-weight: 900;
+      margin: 0;
+      font-size: .98rem;
+    }
+
+    .offers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .offer {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 30px 19px 27px 15px;
+      padding: 30px;
+      box-shadow: 7px 8px 0 var(--ink);
+      position: relative;
+    }
+
+    .offer.featured::after {
+      content: "BEST FOR FASTEST JUMP";
+      position: absolute;
+      top: -18px;
+      right: 22px;
+      background: white;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-weight: 900;
+      transform: rotate(2deg);
+    }
+
+    .offer ul {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    .offer li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .price-note {
+      border: 3px dashed var(--ink);
+      padding: 14px;
+      border-radius: 15px;
+      font-weight: 900;
+      background: var(--muted);
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 30px;
+      overflow: hidden;
+      border: 4px solid var(--ink);
+      border-radius: 24px 17px 26px 15px;
+      background: white;
+      font-weight: 900;
+    }
+
+    .comparison th,
+    .comparison td {
+      padding: 18px 16px;
+      border-bottom: 3px solid var(--ink);
+      border-right: 3px solid var(--ink);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .comparison th:last-child,
+    .comparison td:last-child {
+      border-right: 0;
+    }
+
+    .comparison th {
+      font-size: 1.2rem;
+      background: var(--muted);
+    }
+
+    .cta-section {
+      text-align: center;
+      padding: 86px 0 96px;
+    }
+
+    .cta-section .whiteboard-card {
+      max-width: 900px;
+      margin: 0 auto;
+      transform: rotate(-.5deg);
+    }
+
+    .footer {
+      border-top: 4px solid var(--ink);
+      padding: 28px 0 42px;
+      font-weight: 900;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .small-note {
+      font-size: .9rem;
+      opacity: .82;
+      max-width: 760px;
+      margin: 16px auto 0;
+      font-weight: 800;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .two-col,
+      .offers {
+        grid-template-columns: 1fr;
+      }
+
+      .logic-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+      }
+
+      .subject-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 20px, 1140px);
+      }
+
+      .nav-links {
+        gap: 12px;
+        font-size: .86rem;
+      }
+
+      .subject-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison {
+        font-size: .9rem;
+      }
+
+      .comparison th,
+      .comparison td {
+        padding: 12px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="page">
+      <nav aria-label="Main navigation">
+        <a class="logo" href="index.html">GarrettPrep.com</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="accelerator.html">SAT Accelerator</a>
+          <a href="store.html">Digital Store</a>
+          <a href="about.html">About</a>
+          <a class="schedule-link" href="schedule.html">Summer Schedule</a>
+          <a class="btn btn-small" href="book.html">Book Now</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero page" id="top">
+      <div>
+        <div class="eyebrow"><span class="check">✓</span> Full SAT Accelerator</div>
+        <h1><span class="scribble-line">150-Point</span><br />Score Jump<br />Goal</h1>
+        <p>
+          For serious students who are done guessing, rushing, and losing points to SAT traps. GarrettPrep teaches the full SAT like a whiteboard playbook: Reading, Writing, Math, timing, and test-day strategy.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Book A Free Diagnostic</a>
+          <div class="micro-proof">Private 1-on-1 coaching, group SAT prep, summer prep, and digital resources.</div>
+        </div>
+      </div>
+
+      <aside class="whiteboard-card hero-board" aria-label="GarrettPrep method diagram">
+        <div class="flow-title">The GarrettPrep Method</div>
+        <div class="flow-row">
+          <div class="circle-num">1</div>
+          <div><strong>Find the leak</strong><span>Which section, question type, or habit is costing points?</span></div>
+        </div>
+        <div class="flow-row">
+          <div class="circle-num">2</div>
+          <div><strong>Teach the move</strong><span>Replace confusion with a simple rule, shortcut, or strategy.</span></div>
+        </div>
+        <div class="flow-row">
+          <div class="circle-num">3</div>
+          <div><strong>Drill for speed</strong><span>Practice Reading, Writing, and Math under time pressure.</span></div>
+        </div>
+        <div class="flow-row">
+          <div class="circle-num">4</div>
+          <div><strong>Bank the points</strong><span>Turn careless misses into repeatable wins.</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section page" id="problem">
+      <div class="two-col">
+        <div class="whiteboard-card">
+          <h2>The Problem</h2>
+          <p class="section-lead">Most SAT prep gives students more work. More random work does not automatically create a higher score.</p>
+          <ul class="bad-list">
+            <li><span class="xmark">✕</span><span>Students read passages without a repeatable strategy.</span></li>
+            <li><span class="xmark">✕</span><span>They miss grammar rules that should be automatic.</span></li>
+            <li><span class="xmark">✕</span><span>They over-solve Math questions and run out of time.</span></li>
+            <li><span class="xmark">✕</span><span>They practice randomly instead of attacking score leaks.</span></li>
+          </ul>
+          <div class="stick-scene">
+            <svg class="stick" viewBox="0 0 100 140" role="img" aria-label="worried stick figure">
+              <circle cx="50" cy="25" r="18" fill="none" stroke="currentColor" stroke-width="5" />
+              <circle cx="43" cy="22" r="2.5" fill="currentColor" />
+              <circle cx="57" cy="22" r="2.5" fill="currentColor" />
+              <path d="M40 35 Q50 28 60 35" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+              <path d="M50 43 L50 86 M24 62 L76 62 M50 86 L27 124 M50 86 L75 124" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+              <path d="M76 13 q12 -17 28 -2" fill="none" stroke="currentColor" stroke-width="4" />
+              <text x="82" y="10" font-size="22" font-weight="900">?</text>
+            </svg>
+            <span>Confused student → random prep → same score.</span>
+          </div>
+        </div>
+
+        <div class="whiteboard-card">
+          <h2>The Fix</h2>
+          <p class="section-lead">We turn the SAT into a small set of repeatable moves.</p>
+          <ul class="good-list">
+            <li><span class="check">✓</span><span>Reading strategies for main idea, evidence, inference, and trap answers.</span></li>
+            <li><span class="check">✓</span><span>Writing rules for grammar, punctuation, transitions, and sentence logic.</span></li>
+            <li><span class="check">✓</span><span>Math shortcuts, formula recognition, and timed problem-solving.</span></li>
+            <li><span class="check">✓</span><span>Error logs that reveal exactly what to attack next.</span></li>
+          </ul>
+          <div class="stick-scene">
+            <svg class="stick" viewBox="0 0 100 140" role="img" aria-label="happy stick figure with lightbulb">
+              <circle cx="50" cy="37" r="18" fill="none" stroke="currentColor" stroke-width="5" />
+              <circle cx="43" cy="34" r="2.5" fill="currentColor" />
+              <circle cx="57" cy="34" r="2.5" fill="currentColor" />
+              <path d="M41 43 Q50 51 60 43" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+              <path d="M50 55 L50 95 M25 73 L75 73 M50 95 L25 128 M50 95 L77 128" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+              <path d="M72 54 L89 33" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+              <circle cx="82" cy="17" r="9" fill="none" stroke="currentColor" stroke-width="4" />
+              <path d="M78 28 H86 M72 8 L66 3 M92 8 L98 3 M82 2 V-7" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            </svg>
+            <span>Pattern spotted → strategy used → points saved.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page" id="solution">
+      <div class="whiteboard-card">
+        <h2>Whiteboard Logic, Not Random Practice</h2>
+        <p class="section-lead">Every lesson follows the same loop so students stop treating the SAT like hundreds of unrelated questions.</p>
+        <div class="logic-strip">
+          <div class="logic-box"><strong>1) Trap</strong><span class="xmark">✕</span> What mistake does the SAT want?</div>
+          <div class="arrow">→</div>
+          <div class="logic-box"><strong>2) Move</strong><span class="check">✓</span> What rule, shortcut, or strategy solves it fastest?</div>
+          <div class="arrow">→</div>
+          <div class="logic-box"><strong>3) Drill</strong><span class="check">✓</span> Can you do it under pressure?</div>
+        </div>
+      </div>
+
+      <div class="subject-grid" aria-label="SAT sections taught">
+        <div class="mini-card" style="--rot:-1.4deg"><strong>Reading</strong><p>Main idea, evidence, inference, vocabulary, and trap answer elimination.</p></div>
+        <div class="mini-card" style="--rot:1deg"><strong>Writing</strong><p>Grammar, punctuation, transitions, sentence structure, and rhetorical skills.</p></div>
+        <div class="mini-card" style="--rot:-.6deg"><strong>Math</strong><p>Algebra, functions, geometry, data, formulas, and shortcut-based solving.</p></div>
+        <div class="mini-card" style="--rot:1.3deg"><strong>Strategy</strong><p>Timing, pacing, educated guessing, confidence, and test-day execution.</p></div>
+      </div>
+    </section>
+
+    <section class="section page" id="offers">
+      <h2>Offers Stack</h2>
+      <p class="section-lead">Two ways to train: premium 1-on-1 coaching or scalable group SAT prep.</p>
+
+      <div class="offers">
+        <article class="offer featured">
+          <h3>High-Ticket 1-on-1 SAT Accelerator</h3>
+          <p>Best for students who need a serious jump fast and want direct coaching from Garrett.</p>
+          <ul>
+            <li><span class="check">✓</span><span>Private coaching customized to the student</span></li>
+            <li><span class="check">✓</span><span>Full SAT plan: Reading, Writing, Math, and strategy</span></li>
+            <li><span class="check">✓</span><span>Weekly diagnostic review and error log</span></li>
+            <li><span class="check">✓</span><span>Pattern lessons, speed drills, and homework accountability</span></li>
+            <li><span class="check">✓</span><span>150-point score-increase goal discussed during application</span></li>
+          </ul>
+          <div class="price-note">Application only. Limited seats because this is led directly by Garrett.</div>
+        </article>
+
+        <article class="offer">
+          <h3>1-to-Many Group SAT Accelerator</h3>
+          <p>Best for students who want the same SAT playbook in a lower-cost, scalable format.</p>
+          <ul>
+            <li><span class="check">✓</span><span>Live group sessions</span></li>
+            <li><span class="check">✓</span><span>Weekly whiteboard-style SAT lessons</span></li>
+            <li><span class="check">✓</span><span>Shared drills and timed practice sets</span></li>
+            <li><span class="check">✓</span><span>Group accountability and structure</span></li>
+            <li><span class="check">✓</span><span>Upgrade path to 1-on-1 coaching</span></li>
+          </ul>
+          <div class="price-note">Built for scale. Great for students who can stay disciplined with group structure.</div>
+        </article>
+      </div>
+
+      <table class="comparison" aria-label="Comparison of GarrettPrep offers">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>1-on-1 SAT Accelerator</th>
+            <th>Group SAT Accelerator</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Best for</td>
+            <td>Maximum personal attention</td>
+            <td>Affordable structured training</td>
+          </tr>
+          <tr>
+            <td>Coverage</td>
+            <td>Reading, Writing, Math, timing, and strategy</td>
+            <td>Reading, Writing, Math, timing, and strategy</td>
+          </tr>
+          <tr>
+            <td>Plan</td>
+            <td>Fully customized to diagnostic gaps</td>
+            <td>Standard GarrettPrep curriculum</td>
+          </tr>
+          <tr>
+            <td>Accountability</td>
+            <td>Direct tracking and weekly adjustments</td>
+            <td>Group pacing and homework structure</td>
+          </tr>
+          <tr>
+            <td>Summer option</td>
+            <td><span class="check">✓</span> Strong fit for July 6 – August 20</td>
+            <td><span class="check">✓</span> Strong fit for July 6 – August 20</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="cta-section page" id="apply">
+      <div class="whiteboard-card">
+        <h2>Ready To Stop Losing Easy SAT Points?</h2>
+        <p class="section-lead">Start with a free diagnostic. We identify the traps costing points, map the prep plan, and decide whether 1-on-1 or group training fits best.</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Book Free Diagnostic</a>
+          <a class="btn btn-big" href="schedule.html">View Summer Schedule</a>
+        </div>
+        <p class="small-note">This page uses the responder Google Form link you provided.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page footer-row">
+      <div>© GarrettPrep.com</div>
+      <div>Diagnose → Strategy → Reps → Score Jump</div>
+    </div>
+  </footer>
+</body>
+</html>

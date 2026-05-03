@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Store | GarrettPrep</title>
+  <style>
+    :root {
+      --ink: #111;
+      --paper: #fffef8;
+      --muted: #f6f4ec;
+      --red: #e9362f;
+      --green: #22a33d;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Comic Sans MS", "Comic Sans", "Marker Felt", "Segoe Print", system-ui, sans-serif;
+      line-height: 1.35;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(0,0,0,.025) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 30%, rgba(0,0,0,.02) 0 1px, transparent 1px);
+      background-size: 38px 38px, 52px 52px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      background: rgba(255,254,248,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: clamp(1.25rem, 2vw, 1.7rem);
+      letter-spacing: -.03em;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      height: 4px;
+      background: var(--ink);
+      transform: rotate(-1deg);
+      border-radius: 999px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 800;
+      font-size: .96rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a { position: relative; }
+
+    .nav-links a:hover::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: -4px;
+      height: 3px;
+      background: var(--ink);
+      transform: rotate(-2deg);
+      border-radius: 999px;
+    }
+
+    .schedule-link {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: white;
+      box-shadow: 3px 4px 0 var(--ink);
+      transform: rotate(-1deg);
+    }
+
+    .schedule-link::before {
+      content: "✓ ";
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 4px solid var(--ink);
+      padding: 13px 18px;
+      border-radius: 18px 14px 20px 12px;
+      font-weight: 900;
+      background: white;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(-.4deg);
+      transition: .15s ease;
+      text-align: center;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 4px) rotate(.2deg);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .btn-small {
+      padding: 9px 14px;
+      border-width: 3px;
+      box-shadow: 4px 4px 0 var(--ink);
+      border-radius: 14px;
+    }
+
+    .btn-big {
+      font-size: 1.25rem;
+      padding: 18px 26px;
+      border-width: 5px;
+      box-shadow: 8px 9px 0 var(--ink);
+    }
+
+    .btn-check::before {
+      content: "✓";
+      color: var(--green);
+      margin-right: 8px;
+      font-weight: 900;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 42px;
+      padding: 64px 0 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 900;
+      background: white;
+      transform: rotate(-1deg);
+      margin-bottom: 18px;
+    }
+
+    .check, .xmark {
+      font-size: 1.65rem;
+      line-height: .8;
+      font-weight: 900;
+    }
+
+    .check { color: var(--green); }
+    .xmark { color: var(--red); }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    h1 {
+      font-size: clamp(3.1rem, 7.5vw, 6.9rem);
+      max-width: 960px;
+    }
+
+    h2 {
+      font-size: clamp(2.4rem, 5vw, 4.9rem);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      margin-bottom: 12px;
+    }
+
+    p, li { font-weight: 850; }
+
+    .section-lead, .hero p {
+      font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+      font-weight: 850;
+    }
+
+    .scribble-line {
+      display: inline-block;
+      position: relative;
+    }
+
+    .scribble-line::after {
+      content: "";
+      position: absolute;
+      left: 1%;
+      right: -2%;
+      bottom: -.08em;
+      height: .08em;
+      background: var(--ink);
+      border-radius: 999px;
+      transform: rotate(-1deg);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .micro-proof {
+      font-weight: 900;
+      font-size: 1rem;
+      max-width: 340px;
+    }
+
+    .whiteboard-card {
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 31px 22px 34px 19px;
+      padding: clamp(22px, 3vw, 34px);
+      box-shadow: 10px 11px 0 var(--ink);
+      position: relative;
+    }
+
+    .whiteboard-card::before {
+      content: "";
+      position: absolute;
+      inset: 9px -8px -7px 8px;
+      border: 2px solid rgba(0,0,0,.18);
+      border-radius: 28px 21px 31px 17px;
+      z-index: -1;
+      transform: rotate(.5deg);
+    }
+
+    .section { padding: 72px 0; }
+
+    .product-preview {
+      border: 4px solid var(--ink);
+      border-radius: 26px 18px 30px 15px;
+      padding: 22px;
+      background: var(--muted);
+      transform: rotate(1deg);
+    }
+
+    .sheet-stack {
+      position: relative;
+      min-height: 370px;
+      margin-top: 18px;
+    }
+
+    .sheet {
+      position: absolute;
+      width: 74%;
+      min-height: 280px;
+      border: 4px solid var(--ink);
+      background: white;
+      border-radius: 14px 10px 17px 12px;
+      padding: 20px;
+      box-shadow: 5px 6px 0 var(--ink);
+    }
+
+    .sheet:nth-child(1) { left: 9%; top: 48px; transform: rotate(-7deg); }
+    .sheet:nth-child(2) { left: 15%; top: 24px; transform: rotate(4deg); }
+    .sheet:nth-child(3) { left: 20%; top: 0; transform: rotate(-1deg); }
+
+    .sheet strong {
+      font-size: 1.45rem;
+      display: block;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      text-decoration-thickness: 3px;
+      margin-bottom: 14px;
+    }
+
+    .fake-lines {
+      display: grid;
+      gap: 11px;
+      margin-top: 18px;
+    }
+
+    .fake-lines span {
+      display: block;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--ink);
+    }
+
+    .fake-lines span:nth-child(2) { width: 78%; }
+    .fake-lines span:nth-child(3) { width: 58%; }
+    .fake-lines span:nth-child(4) { width: 86%; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 28px;
+      align-items: stretch;
+      margin-top: 28px;
+    }
+
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .offer-card, .mini-product {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 30px 19px 27px 15px;
+      padding: 30px;
+      box-shadow: 7px 8px 0 var(--ink);
+      position: relative;
+      transform: rotate(var(--rot));
+    }
+
+    .offer-card.featured::after {
+      content: "START HERE";
+      position: absolute;
+      top: -18px;
+      right: 22px;
+      background: white;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-weight: 900;
+      transform: rotate(2deg);
+    }
+
+    .price {
+      font-size: clamp(2.4rem, 5vw, 4.3rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.06em;
+      margin: 16px 0;
+    }
+
+    .price span {
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .card-list {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    .card-list li {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 900;
+      background: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .coming-soon {
+      border: 3px dashed var(--ink);
+      border-radius: 18px 12px 19px 15px;
+      padding: 14px;
+      background: var(--muted);
+      font-weight: 900;
+      margin-top: 18px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr 60px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 32px;
+    }
+
+    .step-box {
+      border: 3px solid var(--ink);
+      border-radius: 18px 12px 19px 15px;
+      padding: 18px;
+      background: white;
+      min-height: 145px;
+    }
+
+    .step-box strong {
+      font-size: 1.35rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .arrow {
+      font-size: 2.6rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .stick-scene {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .stick { width: 88px; height: 122px; flex: 0 0 auto; }
+
+    .cta-section {
+      text-align: center;
+      padding: 78px 0 96px;
+    }
+
+    .cta-section .whiteboard-card {
+      max-width: 900px;
+      margin: 0 auto;
+      transform: rotate(-.5deg);
+    }
+
+    .footer {
+      border-top: 4px solid var(--ink);
+      padding: 28px 0 42px;
+      font-weight: 900;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      font-size: .98rem;
+      opacity: .85;
+      font-weight: 850;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      .hero, .two-col, .three-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); }
+      nav { align-items: flex-start; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 20px, 1140px); }
+      .nav-links { gap: 12px; font-size: .86rem; }
+      .sheet { width: 82%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="page">
+      <nav aria-label="Main navigation">
+        <a class="logo" href="index.html">GarrettPrep.com</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="accelerator.html">SAT Accelerator</a>
+          <a href="store.html">Digital Store</a>
+          <a href="about.html">About</a>
+          <a class="schedule-link" href="schedule.html">Summer Schedule</a>
+          <a class="btn btn-small" href="book.html">Book Now</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero page">
+      <div>
+        <div class="eyebrow"><span class="check">✓</span> Digital SAT tools</div>
+        <h1>The <span class="scribble-line">GarrettPrep</span><br />Digital Store</h1>
+        <p>
+          Downloadable SAT resources for students who want shortcut sheets, high-yield drills, and clean whiteboard-style review tools without needing a full tutoring package yet.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-big btn-check" href="#cheat-sheet">View Cheat Sheet</a>
+          <div class="micro-proof">Start with the 6-page SAT cheat sheet. Add drill packs later.</div>
+        </div>
+      </div>
+
+      <aside class="whiteboard-card product-preview" aria-label="6 page SAT cheat sheet preview">
+        <h2 style="font-size:clamp(2rem, 4vw, 3.4rem); margin-bottom:8px;">6-Page SAT Cheat Sheet</h2>
+        <p class="section-lead">A compact full-SAT review tool: Reading, Writing, Math, and strategy.</p>
+        <div class="sheet-stack">
+          <div class="sheet">
+            <strong>Page 3: Math Traps</strong>
+            <div class="fake-lines"><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="sheet">
+            <strong>Page 2: Grammar Rules</strong>
+            <div class="fake-lines"><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="sheet">
+            <strong>Page 1: SAT Game Plan</strong>
+            <div class="fake-lines"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section page" id="cheat-sheet">
+      <h2>Featured Product</h2>
+      <p class="section-lead">The first digital asset should be simple, useful, and easy to request or buy.</p>
+
+      <div class="two-col">
+        <article class="offer-card featured" style="--rot:-.7deg;">
+          <div class="tag">Full SAT review</div>
+          <h3>6-Page SAT Cheat Sheet</h3>
+          <p>A clean, printable SAT review sheet designed to help students remember the highest-yield rules, traps, and strategies before practice or test day.</p>
+          <div class="price">$9 <span>/ placeholder price</span></div>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Reading passage strategy and answer elimination reminders</span></li>
+            <li><span class="check">✓</span><span>Writing grammar rules, punctuation, transitions, and sentence logic</span></li>
+            <li><span class="check">✓</span><span>Math formulas, pattern shortcuts, and common trap warnings</span></li>
+            <li><span class="check">✓</span><span>Timing, pacing, and test-day execution checklist</span></li>
+            <li><span class="check">✓</span><span>Whiteboard-style layout that feels like GarrettPrep tutoring notes</span></li>
+          </ul>
+          <div class="hero-actions">
+            <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Request Access</a>
+          </div>
+          <p class="note">Later, replace this with a Stripe, Gumroad, Shopify, Payhip, or checkout link when ready.</p>
+        </article>
+
+        <aside class="offer-card" style="--rot:.4deg;">
+          <h3>What Students Use It For</h3>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Quick review before a practice test</span></li>
+            <li><span class="check">✓</span><span>Last-minute rule refresh</span></li>
+            <li><span class="check">✓</span><span>Homework companion during prep</span></li>
+            <li><span class="check">✓</span><span>Parent-friendly study handout</span></li>
+            <li><span class="xmark">✕</span><span>Not a replacement for real practice and review</span></li>
+          </ul>
+          <div class="stick-scene">
+            <svg class="stick" viewBox="0 0 100 140" role="img" aria-label="stick figure holding paper">
+              <rect x="55" y="18" width="34" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="4" />
+              <path d="M62 30 H82 M62 41 H80 M62 52 H75" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+              <circle cx="36" cy="40" r="17" fill="none" stroke="currentColor" stroke-width="5" />
+              <circle cx="30" cy="38" r="2.5" fill="currentColor" />
+              <circle cx="42" cy="38" r="2.5" fill="currentColor" />
+              <path d="M29 46 Q36 53 45 46" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+              <path d="M36 57 L36 96 M16 73 L63 64 M36 96 L15 128 M36 96 L62 128" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+            </svg>
+            <span>Simple sheet. Fast review. Less guessing.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section page" id="future-products">
+      <h2>Future Digital Assets</h2>
+      <p class="section-lead">These are placeholders so the store can grow without redesigning the page.</p>
+
+      <div class="three-grid">
+        <article class="mini-product" style="--rot:-1deg;">
+          <div class="tag">Coming soon</div>
+          <h3>SAT Grammar Drill Pack</h3>
+          <p>Timed drills for punctuation, transitions, sentence boundaries, and common grammar traps.</p>
+          <div class="coming-soon">Status: build after cheat sheet</div>
+        </article>
+
+        <article class="mini-product" style="--rot:.8deg;">
+          <div class="tag">Coming soon</div>
+          <h3>SAT Math Shortcut Pack</h3>
+          <p>Pattern-based practice for systems, functions, percents, geometry, data, and calculator strategy.</p>
+          <div class="coming-soon">Status: build after cheat sheet</div>
+        </article>
+
+        <article class="mini-product" style="--rot:-.6deg;">
+          <div class="tag">Coming soon</div>
+          <h3>Full SAT Error Log Template</h3>
+          <p>A printable tracker that turns missed questions into a repeatable prep plan.</p>
+          <div class="coming-soon">Status: easy first add-on</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section page" id="how-it-works">
+      <div class="whiteboard-card">
+        <h2>How The Store Works</h2>
+        <p class="section-lead">For now, this is a clean sales page. Later, connect it to a checkout system.</p>
+
+        <div class="steps">
+          <div class="step-box"><strong>1) Pick Resource</strong><span class="check">✓</span> Start with the 6-page SAT Cheat Sheet.</div>
+          <div class="arrow">→</div>
+          <div class="step-box"><strong>2) Request / Checkout</strong><span class="check">✓</span> Use the form now, or add Stripe/Gumroad later.</div>
+          <div class="arrow">→</div>
+          <div class="step-box"><strong>3) Download</strong><span class="check">✓</span> Student gets a PDF and uses it with practice tests or tutoring.</div>
+        </div>
+
+        <p class="note">Until checkout is connected, the button sends people to your Google Form.</p>
+      </div>
+    </section>
+
+    <section class="cta-section page">
+      <div class="whiteboard-card">
+        <h2>Want The Cheat Sheet?</h2>
+        <p class="section-lead">Use this page as your digital product storefront. The first checkout link can later go directly to the 6-page SAT Cheat Sheet.</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Request Access</a>
+          <a class="btn btn-big" href="schedule.html">View Summer Prep</a>
+        </div>
+        <p class="note">This page uses the responder Google Form link you provided.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page footer-row">
+      <div>© GarrettPrep.com</div>
+      <div>Digital SAT tools → fewer traps → better prep</div>
+    </div>
+  </footer>
+</body>
+</html>

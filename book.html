@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Now | GarrettPrep</title>
+  <style>
+    :root {
+      --ink: #111;
+      --paper: #fffef8;
+      --muted: #f6f4ec;
+      --red: #e9362f;
+      --green: #22a33d;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Comic Sans MS", "Comic Sans", "Marker Felt", "Segoe Print", system-ui, sans-serif;
+      line-height: 1.35;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(0,0,0,.025) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 30%, rgba(0,0,0,.02) 0 1px, transparent 1px);
+      background-size: 38px 38px, 52px 52px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 99;
+      background: rgba(255,254,248,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-weight: 900;
+      font-size: clamp(1.25rem, 2vw, 1.7rem);
+      letter-spacing: -.03em;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -5px;
+      height: 4px;
+      background: var(--ink);
+      transform: rotate(-1deg);
+      border-radius: 999px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-weight: 800;
+      font-size: .96rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a { position: relative; }
+
+    .nav-links a:hover::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      bottom: -4px;
+      height: 3px;
+      background: var(--ink);
+      transform: rotate(-2deg);
+      border-radius: 999px;
+    }
+
+    .schedule-link {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: white;
+      box-shadow: 3px 4px 0 var(--ink);
+      transform: rotate(-1deg);
+    }
+
+    .schedule-link::before {
+      content: "✓ ";
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 4px solid var(--ink);
+      padding: 13px 18px;
+      border-radius: 18px 14px 20px 12px;
+      font-weight: 900;
+      background: white;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(-.4deg);
+      transition: .15s ease;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translate(3px, 4px) rotate(.2deg);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .btn-small {
+      padding: 9px 14px;
+      border-width: 3px;
+      box-shadow: 4px 4px 0 var(--ink);
+      border-radius: 14px;
+    }
+
+    .btn-big {
+      font-size: 1.25rem;
+      padding: 18px 26px;
+      border-width: 5px;
+      box-shadow: 8px 9px 0 var(--ink);
+    }
+
+    .btn-check::before {
+      content: "✓";
+      color: var(--green);
+      margin-right: 8px;
+      font-weight: 900;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 42px;
+      padding: 64px 0 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 900;
+      background: white;
+      transform: rotate(-1deg);
+      margin-bottom: 18px;
+    }
+
+    .check, .xmark {
+      font-size: 1.65rem;
+      line-height: .8;
+      font-weight: 900;
+    }
+
+    .check { color: var(--green); }
+    .xmark { color: var(--red); }
+
+    h1, h2, h3 {
+      margin: 0;
+      letter-spacing: -.045em;
+      line-height: .96;
+    }
+
+    h1 {
+      font-size: clamp(3.1rem, 7.5vw, 6.9rem);
+      max-width: 960px;
+    }
+
+    h2 {
+      font-size: clamp(2.4rem, 5vw, 4.9rem);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      margin-bottom: 12px;
+    }
+
+    p, li, label { font-weight: 850; }
+
+    .section-lead, .hero p {
+      font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+      font-weight: 850;
+    }
+
+    .scribble-line {
+      display: inline-block;
+      position: relative;
+    }
+
+    .scribble-line::after {
+      content: "";
+      position: absolute;
+      left: 1%;
+      right: -2%;
+      bottom: -.08em;
+      height: .08em;
+      background: var(--ink);
+      border-radius: 999px;
+      transform: rotate(-1deg);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .micro-proof {
+      font-weight: 900;
+      font-size: 1rem;
+      max-width: 340px;
+    }
+
+    .whiteboard-card {
+      background: #fff;
+      border: 4px solid var(--ink);
+      border-radius: 31px 22px 34px 19px;
+      padding: clamp(22px, 3vw, 34px);
+      box-shadow: 10px 11px 0 var(--ink);
+      position: relative;
+    }
+
+    .whiteboard-card::before {
+      content: "";
+      position: absolute;
+      inset: 9px -8px -7px 8px;
+      border: 2px solid rgba(0,0,0,.18);
+      border-radius: 28px 21px 31px 17px;
+      z-index: -1;
+      transform: rotate(.5deg);
+    }
+
+    .section { padding: 72px 0; }
+
+    .booking-board {
+      display: grid;
+      gap: 16px;
+    }
+
+    .booking-step {
+      border: 3px solid var(--ink);
+      border-radius: 20px 14px 22px 16px;
+      padding: 18px;
+      background: var(--muted);
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .circle-num {
+      width: 44px;
+      height: 44px;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.25rem;
+      background: white;
+    }
+
+    .booking-step strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .form-frame-wrap {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 31px 22px 34px 19px;
+      padding: 12px;
+      box-shadow: 8px 9px 0 var(--ink);
+      margin-top: 28px;
+    }
+
+    .google-form {
+      width: 100%;
+      height: 1250px;
+      border: 0;
+      border-radius: 20px 14px 24px 16px;
+      background: white;
+      display: block;
+    }
+
+    .fallback-box {
+      border: 3px dashed var(--ink);
+      border-radius: 18px 12px 19px 15px;
+      padding: 16px;
+      background: var(--muted);
+      font-weight: 900;
+      margin-top: 20px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .three-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .mini-card {
+      background: white;
+      border: 4px solid var(--ink);
+      border-radius: 28px 18px 30px 15px;
+      padding: 24px;
+      box-shadow: 6px 7px 0 var(--ink);
+      transform: rotate(var(--rot));
+      min-height: 210px;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 900;
+      background: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .card-list {
+      list-style: none;
+      padding: 0;
+      margin: 22px 0 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    .card-list li {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      font-weight: 900;
+    }
+
+    .contact-box {
+      border: 4px solid var(--ink);
+      border-radius: 26px 18px 30px 15px;
+      padding: 22px;
+      background: var(--muted);
+      transform: rotate(1deg);
+    }
+
+    .placeholder-link {
+      display: block;
+      border: 3px dashed var(--ink);
+      border-radius: 16px;
+      padding: 14px;
+      background: white;
+      font-weight: 900;
+      margin-top: 14px;
+      word-break: break-word;
+    }
+
+    .stick-scene {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .stick { width: 88px; height: 122px; flex: 0 0 auto; }
+
+    .footer {
+      border-top: 4px solid var(--ink);
+      padding: 28px 0 42px;
+      font-weight: 900;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .note {
+      font-size: .98rem;
+      opacity: .85;
+      font-weight: 850;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      .hero, .two-col, .three-grid { grid-template-columns: 1fr; }
+      nav { align-items: flex-start; flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 20px, 1140px); }
+      .nav-links { gap: 12px; font-size: .86rem; }
+      .booking-step { grid-template-columns: 1fr; }
+      .google-form { height: 1450px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <div class="page">
+      <nav aria-label="Main navigation">
+        <a class="logo" href="index.html">GarrettPrep.com</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="accelerator.html">SAT Accelerator</a>
+          <a href="store.html">Digital Store</a>
+          <a href="about.html">About</a>
+          <a class="schedule-link" href="schedule.html">Summer Schedule</a>
+          <a class="btn btn-small" href="book.html">Book Now</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero page">
+      <div>
+        <div class="eyebrow"><span class="check">✓</span> Start here</div>
+        <h1>Book Your <span class="scribble-line">Free</span><br />SAT Diagnostic</h1>
+        <p>
+          Tell GarrettPrep where the student is now, where they want to go, and when they are testing. Then we recommend the right SAT prep path: 1-on-1 coaching, group prep, summer sprint, or digital resources.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-big btn-check" href="#diagnostic-form">Start The Form</a>
+          <div class="micro-proof">The responder Google Form is embedded directly on this page.</div>
+        </div>
+      </div>
+
+      <aside class="whiteboard-card booking-board" aria-label="Booking steps">
+        <div class="booking-step">
+          <div class="circle-num">1</div>
+          <div><strong>Submit the form</strong>Share current score, target score, timeline, and preferred prep option.</div>
+        </div>
+        <div class="booking-step">
+          <div class="circle-num">2</div>
+          <div><strong>Get placement advice</strong>GarrettPrep reviews whether 1-on-1, group, summer prep, or digital resources make sense.</div>
+        </div>
+        <div class="booking-step">
+          <div class="circle-num">3</div>
+          <div><strong>Claim the seat</strong>If it fits, lock in the schedule and start the prep plan.</div>
+        </div>
+        <div class="stick-scene">
+          <svg class="stick" viewBox="0 0 100 140" role="img" aria-label="stick figure with checklist">
+            <rect x="55" y="16" width="36" height="50" rx="5" fill="none" stroke="currentColor" stroke-width="4" />
+            <path d="M62 30 L67 35 L80 23 M62 47 L67 52 L80 40" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="35" cy="42" r="17" fill="none" stroke="currentColor" stroke-width="5" />
+            <circle cx="29" cy="40" r="2.5" fill="currentColor" />
+            <circle cx="41" cy="40" r="2.5" fill="currentColor" />
+            <path d="M28 48 Q35 55 44 48" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+            <path d="M35 59 L35 98 M15 74 L60 64 M35 98 L14 130 M35 98 L62 130" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+          </svg>
+          <span>Simple form. Clear recommendation. Next steps fast.</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section page" id="diagnostic-form">
+      <div class="whiteboard-card">
+        <h2>Free SAT Diagnostic Request</h2>
+        <p class="section-lead">Fill out the form below. If the embedded form does not load, use the backup button underneath it.</p>
+
+        <div class="form-frame-wrap">
+          <iframe
+            class="google-form"
+            src="https://forms.gle/JvQ1fYBZbEk9jEnH8"
+            title="GarrettPrep Free SAT Diagnostic Request Google Form"
+            loading="lazy">
+            Loading…
+          </iframe>
+        </div>
+
+        <div class="fallback-box">
+          If the form does not show up on your device, open it in a new tab instead.
+        </div>
+
+        <div class="hero-actions" style="justify-content:center;">
+          <a class="btn btn-big btn-check" href="https://forms.gle/JvQ1fYBZbEk9jEnH8" target="_blank" rel="noopener">Open Form In New Tab</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page" id="quick-options">
+      <h2>What Are You Booking?</h2>
+      <p class="section-lead">This page routes every visitor to the right next step.</p>
+
+      <div class="three-grid">
+        <article class="mini-card" style="--rot:-1deg;">
+          <div class="tag">Main offer</div>
+          <h3>Summer SAT Prep</h3>
+          <p>For students targeting the July 6 – August 20 prep window.</p>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Best current priority</span></li>
+            <li><span class="check">✓</span><span>Full SAT prep</span></li>
+          </ul>
+        </article>
+
+        <article class="mini-card" style="--rot:.8deg;">
+          <div class="tag">Premium</div>
+          <h3>1-on-1 Coaching</h3>
+          <p>For families who want the highest accountability and customization.</p>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Private sessions</span></li>
+            <li><span class="check">✓</span><span>Custom score plan</span></li>
+          </ul>
+        </article>
+
+        <article class="mini-card" style="--rot:-.6deg;">
+          <div class="tag">Scalable</div>
+          <h3>Group Prep</h3>
+          <p>For students who want structure, live lessons, and lower-cost prep.</p>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Group lessons</span></li>
+            <li><span class="check">✓</span><span>Timed drills</span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section page" id="after-submit">
+      <div class="two-col">
+        <div class="whiteboard-card">
+          <h2>After You Submit</h2>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>GarrettPrep reviews the student's current score and target score.</span></li>
+            <li><span class="check">✓</span><span>You get a recommendation for 1-on-1, group, summer prep, or digital resources.</span></li>
+            <li><span class="check">✓</span><span>If there is a fit, you lock in the schedule and start prep.</span></li>
+            <li><span class="xmark">✕</span><span>No random plan. No vague “just practice more” advice.</span></li>
+          </ul>
+        </div>
+
+        <div class="whiteboard-card">
+          <h2>What To Have Ready</h2>
+          <ul class="card-list">
+            <li><span class="check">✓</span><span>Current SAT score if known</span></li>
+            <li><span class="check">✓</span><span>Target score or school goal</span></li>
+            <li><span class="check">✓</span><span>Next SAT date or general timeline</span></li>
+            <li><span class="check">✓</span><span>Biggest weakness: Reading, Writing, Math, timing, or confidence</span></li>
+            <li><span class="check">✓</span><span>Summer availability for July 6 – August 20</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="page footer-row">
+      <div>© GarrettPrep.com</div>
+      <div>Book → Diagnose → Plan → Prep</div>
+    </div>
+  </footer>
+</body>
+</html>
